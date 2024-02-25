@@ -59,7 +59,7 @@ namespace APIClinic.Repository
                                                     CreateDate = exa.CreateDate,
                                                     UpdateBy = exa.UpdateBy,
                                                     UpdateDate = exa.UpdateDate
-                                                }).OrderBy(x => x.TransactionDate).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                                }).OrderBy(x => x.TransactionDate).AsNoTracking().ToList();
                 }
 
                 if (param.PaymentType != null && param.PaymentType != "")
@@ -97,10 +97,13 @@ namespace APIClinic.Repository
                                                     CreateDate = exa.CreateDate,
                                                     UpdateBy = exa.UpdateBy,
                                                     UpdateDate = exa.UpdateDate
-                                                }).OrderBy(x => x.TransactionDate).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                                }).OrderBy(x => x.TransactionDate).AsNoTracking().ToList();
                 }
 
-                return transactionHeaderLabList;
+                var TotalPageSize = Math.Ceiling((decimal)transactionHeaderLabList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = transactionHeaderLabList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

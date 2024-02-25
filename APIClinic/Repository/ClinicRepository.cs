@@ -40,7 +40,7 @@ namespace APIClinic.Repository
                                       CreateDate = clinic.CreateDate,
                                       UpdateBy = clinic.UpdateBy,
                                       UpdateDate = clinic.UpdateDate
-                                  }).OrderBy(x => x.Name).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                  }).OrderBy(x => x.Name).AsNoTracking().ToList(); ;
                 }
 
                 if (param.Name == null || param.Name == "")
@@ -57,10 +57,13 @@ namespace APIClinic.Repository
                                       CreateDate = clinic.CreateDate,
                                       UpdateBy = clinic.UpdateBy,
                                       UpdateDate = clinic.UpdateDate
-                                  }).OrderBy(x => x.Name).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                  }).OrderBy(x => x.Name).AsNoTracking().ToList();
                 }
 
-                return clinicList;
+                var TotalPageSize = Math.Ceiling((decimal)clinicList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = clinicList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

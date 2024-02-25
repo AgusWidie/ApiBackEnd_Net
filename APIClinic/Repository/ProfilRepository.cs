@@ -39,11 +39,14 @@ namespace APIClinic.Repository
                                       CreateDate = pro.CreateDate,
                                       UpdateBy = pro.UpdateBy,
                                       UpdateDate = pro.UpdateDate
-                                  }).OrderBy(x => x.Name).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                  }).OrderBy(x => x.Name).AsNoTracking().ToList();
                 }
 
 
-                return profilList;
+                var TotalPageSize = Math.Ceiling((decimal)profilList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = profilList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

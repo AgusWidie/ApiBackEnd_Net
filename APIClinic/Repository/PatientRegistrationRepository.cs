@@ -37,7 +37,10 @@ namespace APIClinic.Repository
                                                join pat in _context.PatientRegistration on spe.Id equals pat.SpecialistDoctorId
                                                join specialist in _context.Specialist on spe.SpecialistId equals specialist.Id
                                                where pat.ClinicId == param.ClinicId && pat.BranchId == param.BranchId
-                                                     && spe.DoctorId == param.DoctorId && pat.RegistrationDate.ToString("yyyy-MM-dd") == param.RegistrationDate.ToString("yyyy-MM-dd")
+                                                     && spe.DoctorId == param.DoctorId
+                                                     && pat.RegistrationDate.Year == param.RegistrationDate.Year
+                                                     && pat.RegistrationDate.Month == param.RegistrationDate.Month
+                                                     && pat.RegistrationDate.Date == param.RegistrationDate.Date
                                                select new PatientRegistrationResponse
                                                {
                                                    Id = pat.Id,
@@ -70,7 +73,7 @@ namespace APIClinic.Repository
                                                    CreateDate = pat.CreateDate,
                                                    UpdateBy = pat.UpdateBy,
                                                    UpdateDate = pat.UpdateDate
-                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().ToList();
                 }
 
                 if (param.DoctorId != null || param.QueueNo != "")
@@ -82,7 +85,10 @@ namespace APIClinic.Repository
                                                join pat in _context.PatientRegistration on spe.Id equals pat.SpecialistDoctorId
                                                join specialist in _context.Specialist on spe.SpecialistId equals specialist.Id
                                                where pat.ClinicId == param.ClinicId && pat.BranchId == param.BranchId
-                                                     && spe.DoctorId == param.DoctorId && pat.RegistrationDate.ToString("yyyy-MM-dd") == param.RegistrationDate.ToString("yyyy-MM-dd")
+                                                     && spe.DoctorId == param.DoctorId
+                                                     && pat.RegistrationDate.Year == param.RegistrationDate.Year
+                                                     && pat.RegistrationDate.Month == param.RegistrationDate.Month
+                                                     && pat.RegistrationDate.Date == param.RegistrationDate.Date
                                                      && pat.QueueNo == param.QueueNo
                                                select new PatientRegistrationResponse
                                                {
@@ -116,10 +122,13 @@ namespace APIClinic.Repository
                                                    CreateDate = pat.CreateDate,
                                                    UpdateBy = pat.UpdateBy,
                                                    UpdateDate = pat.UpdateDate
-                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().ToList();
                 }
 
-                return patientRegistrationList;
+                var TotalPageSize = Math.Ceiling((decimal)patientRegistrationList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = patientRegistrationList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

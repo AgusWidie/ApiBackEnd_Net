@@ -43,7 +43,7 @@ namespace APIClinic.Repository
                                     CreateDate = menu.CreateDate,
                                     UpdateBy = menu.UpdateBy,
                                     UpdateDate = menu.UpdateDate
-                                }).OrderBy(x => x.Sort).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                }).OrderBy(x => x.Sort).AsNoTracking().ToList(); ;
 
                 }
                 else
@@ -63,10 +63,13 @@ namespace APIClinic.Repository
                                     CreateDate = menu.CreateDate,
                                     UpdateBy = menu.UpdateBy,
                                     UpdateDate = menu.UpdateDate
-                                }).OrderBy(x => x.Sort).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                }).OrderBy(x => x.Sort).AsNoTracking().ToList();
                 }
 
-                return menuList;
+                var TotalPageSize = Math.Ceiling((decimal)menuList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = menuList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

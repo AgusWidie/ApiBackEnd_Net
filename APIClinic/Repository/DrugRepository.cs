@@ -47,7 +47,7 @@ namespace APIClinic.Repository
                                     CreateDate = drug.CreateDate,
                                     UpdateBy = drug.UpdateBy,
                                     UpdateDate = drug.UpdateDate
-                                }).OrderBy(x => x.DrugName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                }).OrderBy(x => x.DrugName).AsNoTracking().ToList();
                 }
 
                 if (param.DrugName != null || param.DrugName != "")
@@ -72,10 +72,13 @@ namespace APIClinic.Repository
                                     CreateDate = drug.CreateDate,
                                     UpdateBy = drug.UpdateBy,
                                     UpdateDate = drug.UpdateDate
-                                }).OrderBy(x => x.DrugName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                }).OrderBy(x => x.DrugName).AsNoTracking().ToList();
                 }
 
-                return drugList;
+                var TotalPageSize = Math.Ceiling((decimal)drugList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = drugList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

@@ -34,7 +34,9 @@ namespace APIClinic.Repository
                                                join lab in _context.Laboratorium on branch.Id equals lab.BranchId
                                                join pat in _context.PatientRegistrationLab on lab.Id equals pat.LaboratoriumId
                                                where pat.ClinicId == param.ClinicId && pat.BranchId == param.BranchId
-                                                     && pat.RegistrationDate.ToString("yyyy-MM-dd") == param.RegistrationDate.ToString("yyyy-MM-dd")
+                                                     && pat.RegistrationDate.Year == param.RegistrationDate.Year 
+                                                     && pat.RegistrationDate.Month == param.RegistrationDate.Month
+                                                     && pat.RegistrationDate.Date == param.RegistrationDate.Date
                                                select new PatientRegistrationLabResponse
                                                {
                                                    Id = pat.Id,
@@ -61,7 +63,7 @@ namespace APIClinic.Repository
                                                    CreateDate = pat.CreateDate,
                                                    UpdateBy = pat.UpdateBy,
                                                    UpdateDate = pat.UpdateDate
-                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().ToList();
                 }
 
                 if (param.QueueNo != null && param.QueueNo != "")
@@ -71,7 +73,9 @@ namespace APIClinic.Repository
                                                join lab in _context.Laboratorium on branch.Id equals lab.BranchId
                                                join pat in _context.PatientRegistrationLab on lab.Id equals pat.LaboratoriumId
                                                where pat.ClinicId == param.ClinicId && pat.BranchId == param.BranchId
-                                                     && pat.RegistrationDate.ToString("yyyy-MM-dd") == param.RegistrationDate.ToString("yyyy-MM-dd")
+                                                     && pat.RegistrationDate.Year == param.RegistrationDate.Year
+                                                     && pat.RegistrationDate.Month == param.RegistrationDate.Month
+                                                     && pat.RegistrationDate.Date == param.RegistrationDate.Date
                                                      && param.QueueNo.Contains(param.QueueNo)
                                                select new PatientRegistrationLabResponse
                                                {
@@ -99,10 +103,13 @@ namespace APIClinic.Repository
                                                    CreateDate = pat.CreateDate,
                                                    UpdateBy = pat.UpdateBy,
                                                    UpdateDate = pat.UpdateDate
-                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                               }).OrderByDescending(x => x.QueueNo).AsNoTracking().ToList();
                 }
 
-                return patientRegistrationList;
+                var TotalPageSize = Math.Ceiling((decimal)patientRegistrationList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = patientRegistrationList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

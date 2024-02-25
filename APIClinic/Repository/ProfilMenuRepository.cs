@@ -44,7 +44,7 @@ namespace APIClinic.Repository
                                           CreateDate = proMenu.CreateDate,
                                           UpdateBy = proMenu.UpdateBy,
                                           UpdateDate = proMenu.UpdateDate
-                                      }).OrderBy(x => x.ProfilName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                      }).OrderBy(x => x.ProfilName).AsNoTracking().ToList();
                 }
 
 
@@ -68,7 +68,7 @@ namespace APIClinic.Repository
                                           CreateDate = proMenu.CreateDate,
                                           UpdateBy = proMenu.UpdateBy,
                                           UpdateDate = proMenu.UpdateDate
-                                      }).OrderBy(x => x.ProfilName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                      }).OrderBy(x => x.ProfilName).AsNoTracking().ToList();
                 }
 
                 else
@@ -90,10 +90,13 @@ namespace APIClinic.Repository
                                           CreateDate = proMenu.CreateDate,
                                           UpdateBy = proMenu.UpdateBy,
                                           UpdateDate = proMenu.UpdateDate
-                                      }).OrderBy(x => x.ProfilName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                      }).OrderBy(x => x.ProfilName).AsNoTracking().ToList();
                 }
 
-                return profilMenuList;
+                var TotalPageSize = Math.Ceiling((decimal)profilMenuList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = profilMenuList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {

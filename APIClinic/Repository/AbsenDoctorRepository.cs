@@ -51,7 +51,7 @@ namespace APIClinic.Repository
                                            CreateDate = abs.CreateDate,
                                            UpdateBy = abs.UpdateBy,
                                            UpdateDate = abs.UpdateDate
-                                       }).OrderBy(x => x.DoctorName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                       }).OrderBy(x => x.DoctorName).AsNoTracking().ToList();
                 }
 
                 if (param.Day != null || param.Day != "")
@@ -81,10 +81,13 @@ namespace APIClinic.Repository
                                            CreateDate = abs.CreateDate,
                                            UpdateBy = abs.UpdateBy,
                                            UpdateDate = abs.UpdateDate
-                                       }).OrderBy(x => x.DoctorName).AsNoTracking().Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize);
+                                       }).OrderBy(x => x.DoctorName).AsNoTracking().ToList();
                 }
 
-                return absenDoctorList;
+                var TotalPageSize = Math.Ceiling((decimal)absenDoctorList.Count() / (int)param.PageSize);
+                param.TotalPageSize = (long)TotalPageSize;
+                var result = absenDoctorList.Skip((int)Page * (int)param.PageSize).Take((int)param.PageSize).ToList();
+                return result;
             }
             catch (Exception ex)
             {
