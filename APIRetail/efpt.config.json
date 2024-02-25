@@ -1,0 +1,157 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "retail_systemContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models\/Database",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "APIRetail",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "branch",
+         "ObjectType": 0
+      },
+      {
+         "Name": "company",
+         "ObjectType": 0
+      },
+      {
+         "Name": "customer",
+         "ObjectType": 0
+      },
+      {
+         "Name": "daily_stock",
+         "ObjectType": 0
+      },
+      {
+         "Name": "log_error",
+         "ObjectType": 0
+      },
+      {
+         "Name": "log_job",
+         "ObjectType": 0
+      },
+      {
+         "Name": "menu",
+         "ObjectType": 0
+      },
+      {
+         "Name": "message",
+         "ObjectType": 0
+      },
+      {
+         "Name": "monthly_stock",
+         "ObjectType": 0
+      },
+      {
+         "Name": "product",
+         "ObjectType": 0
+      },
+      {
+         "Name": "product_price_rate",
+         "ObjectType": 0
+      },
+      {
+         "Name": "product_type",
+         "ObjectType": 0
+      },
+      {
+         "Name": "profil",
+         "ObjectType": 0
+      },
+      {
+         "Name": "profil_menu",
+         "ObjectType": 0
+      },
+      {
+         "Name": "profil_user",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchase_order_detail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "purchase_order_header",
+         "ObjectType": 0
+      },
+      {
+         "Name": "sales_order_detail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "sales_order_header",
+         "ObjectType": 0
+      },
+      {
+         "Name": "schedule",
+         "ObjectType": 0
+      },
+      {
+         "Name": "send_email",
+         "ObjectType": 0
+      },
+      {
+         "Name": "send_email_fail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "send_sms",
+         "ObjectType": 0
+      },
+      {
+         "Name": "send_sms_fail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "send_whatsapp",
+         "ObjectType": 0
+      },
+      {
+         "Name": "send_whatsapp_fail",
+         "ObjectType": 0
+      },
+      {
+         "Name": "stock_opname",
+         "ObjectType": 0
+      },
+      {
+         "Name": "supplier",
+         "ObjectType": 0
+      },
+      {
+         "Name": "user_token",
+         "ObjectType": 0
+      },
+      {
+         "Name": "users",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "ConnMySQL",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
