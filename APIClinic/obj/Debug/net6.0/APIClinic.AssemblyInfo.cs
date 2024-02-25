@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("APIClinic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d053064485e947981920b14e83d15f7e37ac7a8")]
 [assembly: System.Reflection.AssemblyProductAttribute("APIClinic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("APIClinic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

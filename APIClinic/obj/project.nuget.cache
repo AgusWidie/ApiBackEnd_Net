@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XIfRMdzuNDu0S/IT6Q0i+B0zmPqBruld6sxyBKW1SXST6FJi/kNkAculfZ4EtWEVS+DKnijNeUpCA1mqmZYKXw==",
+  "dgSpecHash": "wn1lsYFpqf2a6SXiO3gzP5uodh1DoGSecm34uzDc2a+kFzSkxsjyJi0tVf/PTBFNxYDwu/NPjcqkEYIUrivJAw==",
   "success": true,
-  "projectFilePath": "E:\\APIClinic\\APIClinic.csproj",
+  "projectFilePath": "E:\\github\\web-apps-1\\web-apps-1\\APIClinic\\APIClinic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\AGUS-WIDIE\\.nuget\\packages\\google.protobuf\\3.21.9\\google.protobuf.3.21.9.nupkg.sha512",
     "C:\\Users\\AGUS-WIDIE\\.nuget\\packages\\k4os.compression.lz4\\1.3.5\\k4os.compression.lz4.1.3.5.nupkg.sha512",
