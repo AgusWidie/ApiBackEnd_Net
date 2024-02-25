@@ -29,7 +29,7 @@ namespace APIClinic.Service
             try
             {
                 GarbageCollector.GarbageCollection();
-                if (GeneralList._listAbsenDoctor.Count() > 0)
+                if (GeneralList._listSpeciallist.Count() > 0)
                 {
                     if (param.Name == null || param.Name == "")
                     {
@@ -56,6 +56,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listAbsenDoctor.Clear();
                 return null;
             }
 
@@ -78,6 +79,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listSpeciallist.Clear();
                 return null;
             }
 
@@ -109,6 +111,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listSpeciallist.Clear();
                 return null;
             }
 

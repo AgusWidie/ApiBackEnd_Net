@@ -57,6 +57,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listClinic.Clear();
                 return null;
             }
 
@@ -79,6 +80,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listClinic.Clear();
                 return null;
             }
 
@@ -112,6 +114,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listClinic.Clear();
                 return null;
             }
 

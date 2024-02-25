@@ -45,6 +45,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listTransactionDetailPatient.Clear();
                 return null;
             }
 

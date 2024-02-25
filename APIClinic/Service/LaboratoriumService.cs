@@ -59,6 +59,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listLaboratorium.Clear();
                 return null;
             }
 
@@ -81,6 +82,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listLaboratorium.Clear();
                 return null;
             }
         }
@@ -113,6 +115,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listLaboratorium.Clear();
                 return null;
             }
 

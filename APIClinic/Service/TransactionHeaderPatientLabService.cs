@@ -57,6 +57,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listTransactionHeaderPatientLab.Clear();
                 return null;
             }
 
@@ -79,6 +80,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listTransactionHeaderPatientLab.Clear();
                 return null;
             }
         }
@@ -114,6 +116,7 @@ namespace APIClinic.Service
             }
             catch (Exception ex)
             {
+                GeneralList._listTransactionHeaderPatientLab.Clear();
                 return null;
             }
 
