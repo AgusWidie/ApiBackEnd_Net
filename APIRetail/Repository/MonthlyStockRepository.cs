@@ -259,7 +259,7 @@ namespace APIRetail.Repository
                 if (monthlyStockUpdate != null)
                 {
                     monthlyStockUpdate.StockBuy = monthlyStockUpdate.StockBuy + param.StockBuy;
-                    monthlyStockUpdate.StockBuyPrice = (_context.MonthlyStock.Where(x => x.CompanyId == param.CompanyId && x.BranchId == param.BranchId && x.Month == param.Month && x.Year == param.Year && x.ProductId == param.ProductId).Sum(x => x.StockBuyPrice) + param.StockBuyPrice) / (_context.MonthlyStock.Where(x => x.CompanyId == param.CompanyId && x.BranchId == param.BranchId && x.Month == param.Month && x.Year == param.Year && x.ProductId == param.ProductId).Sum(x => x.StockBuy) + param.StockBuy);
+                    monthlyStockUpdate.StockBuyPrice = (monthlyStockUpdate.StockBuyPrice + param.StockBuyPrice) / monthlyStockUpdate.StockBuy;
                     monthlyStockUpdate.StockLast = monthlyStockUpdate.StockFirst + monthlyStockUpdate.StockBuy - param.StockSell;
                     monthlyStockUpdate.UpdateBy = param.UpdateBy;
                     monthlyStockUpdate.UpdateDate = DateTime.Now;
@@ -367,7 +367,7 @@ namespace APIRetail.Repository
                 if (monthlyStockUpdate != null)
                 {
                     monthlyStockUpdate.StockSell = monthlyStockUpdate.StockSell + param.StockSell;
-                    monthlyStockUpdate.StockSellPrice = (_context.MonthlyStock.Where(x => x.CompanyId == param.CompanyId && x.BranchId == param.BranchId && x.Month == param.Month && x.Year == param.Year && x.ProductId == param.ProductId).Sum(x => x.StockSellPrice) + param.StockSellPrice) / (_context.MonthlyStock.Where(x => x.CompanyId == param.CompanyId && x.BranchId == param.BranchId && x.Month == param.Month && x.Year == param.Year && x.ProductId == param.ProductId).Sum(x => x.StockSell) + param.StockSell);
+                    monthlyStockUpdate.StockSellPrice = (monthlyStockUpdate.StockSellPrice + param.StockSellPrice) / monthlyStockUpdate.StockSell;
                     monthlyStockUpdate.StockLast = monthlyStockUpdate.StockFirst + monthlyStockUpdate.StockBuy - monthlyStockUpdate.StockSell;
                     monthlyStockUpdate.UpdateBy = param.UpdateBy;
                     monthlyStockUpdate.UpdateDate = DateTime.Now;

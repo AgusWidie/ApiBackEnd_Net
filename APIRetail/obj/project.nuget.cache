@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "07mQyWS/aDKnh651ALOMyBfFIU+9ZfAJTcb3eODBwR+JSRh1nXrEP0e7P12ZKzeVf/0hmP6tXtP4wYned7eEAw==",
+  "dgSpecHash": "daiW0Af4dtpDpInCS2rYRtVwfrUWlLz2lx4u48ATKXYsNc37crmuvuDvY6/pxG2WERIBDvWycfF3DnmmaBTHcQ==",
   "success": true,
-  "projectFilePath": "E:\\APIRetail\\APIRetail.csproj",
+  "projectFilePath": "E:\\github\\web-apps-1\\web-apps-1\\APIRetail\\APIRetail.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\AGUS-WIDIE\\.nuget\\packages\\google.protobuf\\3.21.9\\google.protobuf.3.21.9.nupkg.sha512",
     "C:\\Users\\AGUS-WIDIE\\.nuget\\packages\\k4os.compression.lz4\\1.3.5\\k4os.compression.lz4.1.3.5.nupkg.sha512",

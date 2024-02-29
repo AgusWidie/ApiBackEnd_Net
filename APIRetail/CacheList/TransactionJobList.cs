@@ -191,9 +191,8 @@ namespace APIRetail.CacheList
             try
             {
                 DecryptMD5 decryptMD5 = new DecryptMD5();
-                mysqlConn = new MySqlConnection(ConnectMySQL);
-                if (mysqlConn.State == System.Data.ConnectionState.Closed)
-                {
+                mysqlConn = new MySqlConnection(decryptMD5.MD5Decrypt(ConnectMySQL));
+                if (mysqlConn.State == System.Data.ConnectionState.Closed) {
                     mysqlConn.Open();
                 }
                 return "Successfully ConnectDB.";
@@ -225,7 +224,7 @@ namespace APIRetail.CacheList
         {
             try
             {
-                string sqlQuery = $"UPDATE log_job SET job_start = NOW(), job_finish = NULL, success = NULL, ACTIVE = 1, DESCRIPTION = 'Start Process Master Job List.' WHERE job_name = 'JobMaster'";
+                string sqlQuery = $"UPDATE log_job SET job_start = NOW(), job_finish = NULL, success = NULL, ACTIVE = 1, DESCRIPTION = 'Start Process Transaction Job List.' WHERE job_name = 'JobTransaction'";
                 MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
                 command.ExecuteNonQuery();
 
@@ -242,7 +241,7 @@ namespace APIRetail.CacheList
         {
             try
             {
-                string sqlQuery = $"UPDATE log_job SET job_finish = NOW(), success = 1, ACTIVE = 1, DESCRIPTION = 'Finish Process Master Job List.' WHERE job_name = 'JobTransaction'";
+                string sqlQuery = $"UPDATE log_job SET job_finish = NOW(), success = 1, ACTIVE = 1, DESCRIPTION = 'Finish Process Transaction Job List.' WHERE job_name = 'JobTransaction'";
                 MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
                 command.ExecuteNonQuery();
 

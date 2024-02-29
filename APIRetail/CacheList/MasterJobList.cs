@@ -238,7 +238,7 @@ namespace APIRetail.CacheList
             try
             {
                 DecryptMD5 decryptMD5 = new DecryptMD5();
-                mysqlConn = new MySqlConnection(ConnectMySQL);
+                mysqlConn = new MySqlConnection(decryptMD5.MD5Decrypt(ConnectMySQL));
                 if(mysqlConn.State == System.Data.ConnectionState.Closed) {
                     mysqlConn.Open();
                 }

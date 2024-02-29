@@ -270,7 +270,8 @@ namespace APIRetail.Repository
                                              CreateBy = branch.CreateBy,
                                              CreateDate = branch.CreateDate,
                                              UpdateBy = branch.UpdateBy,
-                                             UpdateDate = branch.UpdateDate                                          }).Take(1).AsNoTracking();
+                                             UpdateDate = branch.UpdateDate                                          
+                                         }).Take(1).AsNoTracking();
 
                     return purchaseOrderList;
                 }
