@@ -47,7 +47,7 @@ namespace APIRetail.Controllers
 
             if (result.Count() <= 0)
             {
-                return Ok(ResponseHelper.CreateError(200, "Data Sudah Ada."));
+                return Ok(ResponseHelper.CreateError(200, "Data Already Exist."));
             }
             return Ok(ResponseHelper<SendEmailResponse>.Create("Successfully create send email.", result));
         }
@@ -65,7 +65,7 @@ namespace APIRetail.Controllers
 
             if (result.Count() <= 0)
             {
-                return Ok(ResponseHelper.CreateError(200, "Data Sudah Ada."));
+                return Ok(ResponseHelper.CreateError(200, "Data Already Exist."));
             }
             return Ok(ResponseHelper<SendEmailResponse>.Create("Successfully update send email.", result));
         }

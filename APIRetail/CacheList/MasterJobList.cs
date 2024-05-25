@@ -323,7 +323,7 @@ namespace APIRetail.CacheList
             try
             {
                 string sqlQuery = $"select b.Id, c.Id as CompanyId, c.Name as CompanyName, b.Name, b.Address, b.Telp, b.Fax, b.CreateBy, " +
-                               "b.CreateDate, b.UpdateBy, b.UpdateDate from branch b join company c on b.CompanyId = c.Id ";
+                                   "b.CreateDate, b.UpdateBy, b.UpdateDate from branch b join company c on b.CompanyId = c.Id ";
 
                 MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
                 //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));

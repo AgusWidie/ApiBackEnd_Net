@@ -14,13 +14,13 @@
 
         public long CustomerId { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public int? Quantity { get; set; }
 
         public long? Total { get; set; }
 
-        public string CreateBy { get; set; }
+        public string? CreateBy { get; set; }
 
         public DateTime? CreateDate { get; set; }
 

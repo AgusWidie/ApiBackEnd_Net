@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\github\\web-apps-1\\web-apps-1\\APIRetail\\APIRetail.csproj": {}
+    "F:\\Github\\WebApi\\Web-Api\\APIRetail\\APIRetail.csproj": {}
   },
   "projects": {
-    "E:\\github\\web-apps-1\\web-apps-1\\APIRetail\\APIRetail.csproj": {
+    "F:\\Github\\WebApi\\Web-Api\\APIRetail\\APIRetail.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\github\\web-apps-1\\web-apps-1\\APIRetail\\APIRetail.csproj",
+        "projectUniqueName": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\APIRetail.csproj",
         "projectName": "APIRetail",
-        "projectPath": "E:\\github\\web-apps-1\\web-apps-1\\APIRetail\\APIRetail.csproj",
-        "packagesPath": "C:\\Users\\AGUS-WIDIE\\.nuget\\packages\\",
-        "outputPath": "E:\\github\\web-apps-1\\web-apps-1\\APIRetail\\obj\\",
+        "projectPath": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\APIRetail.csproj",
+        "packagesPath": "C:\\Users\\AGUS_WIDIE\\.nuget\\packages\\",
+        "outputPath": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\AGUS-WIDIE\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\AGUS_WIDIE\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -39,6 +39,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -105,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

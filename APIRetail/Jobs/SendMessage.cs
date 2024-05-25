@@ -2,6 +2,7 @@
 using APIRetail.Jobs.IJobs;
 using APIRetail.Models.Database;
 using APIRetail.Repository.IRepository;
+using MySql.Data.MySqlClient;
 using System.Data;
 
 namespace APIRetail.Jobs
@@ -18,6 +19,7 @@ namespace APIRetail.Jobs
         private SendDataMessageWhatsApp msgDataWhatsApp;
         private SendDataMessageSMS msgDataSMS;
         private SendDataMessageEmail msgDataEmail;
+        public MySqlConnection mysqlConn;
 
         public SendMessage(IConfiguration Configuration, retail_systemContext context, ILogError logError)
         {
@@ -26,7 +28,7 @@ namespace APIRetail.Jobs
             _logError = logError;
         }
 
-        public async void SendDataWhatsApp()
+        public void SendDataWhatsApp()
         {
             msgDataWhatsApp = new SendDataMessageWhatsApp(_configuration, _logError, _context);
             threadSendWhatsApp = new Thread(SendWhatsApp);
@@ -37,76 +39,126 @@ namespace APIRetail.Jobs
 
         public void SendWhatsApp()
         {
+           
             try
             {
                 if (bolProcess == false)
                 {
                     bolProcess = true;
-                    var updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendWhatsApp" && x.Active == 1).FirstOrDefault();
-                    if (updateLogJob != null)
-                    {
-                        updateLogJob.JobStart = DateTime.Now;
-                        updateLogJob.JobFinish = null;
-                        updateLogJob.Success = 0;
-                        updateLogJob.Error = 0;
-                        updateLogJob.Description = "";
-                        _context.LogJob.Update(updateLogJob);
-                        _context.SaveChangesAsync();
-                    }
 
-                    var checkSchedule = _context.Schedule.Where(x => x.Active == 1).ToList().OrderBy(x => x.Id);
-                    if (checkSchedule.Count() > 0)
+                    string sendDataMessage = "";
+                    string noWhatsApp = "";
+
+                    string sqlQuery = $"UPDATE log_job SET job_start = NOW(), job_finish = NULL, success = NULL, ACTIVE = 1, DESCRIPTION = 'Start Process Send WhatsApp' WHERE job_name = 'JobSendWhatsApp'";
+                    MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+
+                    sqlQuery = $"select * from schedule where active = 1 ";
+
+                    MySqlCommand cmdSchedule = new MySqlCommand(sqlQuery, mysqlConn);
+                    //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                    MySqlDataAdapter dataAdapterSchedule = new MySqlDataAdapter(cmdSchedule);
+                    DataSet dataSetSchedule = new DataSet();
+                    dataAdapterSchedule.Fill(dataSetSchedule);
+                    DataTable dtSchedule = dataSetSchedule.Tables[0];
+
+                    if (dtSchedule.Rows.Count > 0)
                     {
-                        foreach (var data in checkSchedule)
+                        foreach (DataRow data in dtSchedule.Rows)
                         {
-                            var dataSendWhatsApp = _context.SendWhatsapp.Where(x => x.Active == 1 && x.Send == 0 && x.ScheduleId == data.Id).ToList();
-                            if (dataSendWhatsApp.Count() > 0)
+                            sqlQuery = $"select * from send_whatsapp where active = 1 AND send = 0 AND ScheduleId =  " + Convert.ToInt64(data["Id"]) + " ";
+                            MySqlCommand cmdWA = new MySqlCommand(sqlQuery, mysqlConn);
+                            //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                            MySqlDataAdapter dataAdapterWA = new MySqlDataAdapter(cmdWA);
+                            DataSet dataSetWA = new DataSet();
+                            dataAdapterWA.Fill(dataSetWA);
+                            DataTable dtWA = dataSetWA.Tables[0];
+
+                            if (dtWA.Rows.Count > 0)
                             {
-                                foreach (var dataWhatsApp in dataSendWhatsApp)
+                                foreach (DataRow dataWhatsApp in dtWA.Rows)
                                 {
-                                    if (data.ScheduleDate <= DateTime.Now)
+                                    if (Convert.ToDateTime(data["ScheduleDate"]) <= DateTime.Now)
                                     {
-                                        var sendDataMessage = _context.Message.Where(x => x.Id == dataWhatsApp.MessageId).Select(x => x.MessageData).FirstOrDefault();
-                                        var noWhatsApp = _context.Customer.Where(x => x.Id == dataWhatsApp.CustomerId).Select(x => x.WhatsApp).FirstOrDefault();
+                                        sqlQuery = $"select * from message where Id = " + Convert.ToInt64(dataWhatsApp["MessageId"]) + " ";
+                                        MySqlCommand cmdMsg = new MySqlCommand(sqlQuery, mysqlConn);
+                                        //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                                        MySqlDataAdapter dataAdapterMsg = new MySqlDataAdapter(cmdMsg);
+                                        DataSet dataSetMsg = new DataSet();
+                                        dataAdapterMsg.Fill(dataSetMsg);
+                                        DataTable dtMsg = dataSetMsg.Tables[0];
+
+                                        if (dtMsg.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dataMessage in dtMsg.Rows)
+                                            {
+                                                sendDataMessage = dataMessage["MessageData"].ToString();
+                                            }
+                                        }
+
+                                        sqlQuery = $"select * from customer where Id = " + Convert.ToInt64(data["CustomerId"]) + " ";
+                                        MySqlCommand cmdCustomer = new MySqlCommand(sqlQuery, mysqlConn);
+                                        //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                                        MySqlDataAdapter dataAdapterCustomer = new MySqlDataAdapter(cmdCustomer);
+                                        DataSet dataSetCustomer = new DataSet();
+                                        dataAdapterCustomer.Fill(dataSetMsg);
+                                        DataTable dtCustomer = dataSetCustomer.Tables[0];
+
+                                        if (dtCustomer.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dataCust in dtCustomer.Rows)
+                                            {
+                                                noWhatsApp = dataCust["WhatsApp"].ToString();
+                                            }
+                                        }
+
                                         msgDataWhatsApp.SendDataWhatsAppAsync(sendDataMessage, noWhatsApp);
+
+                                        dataAdapterMsg.Dispose();
+                                        dataSetMsg.Dispose();
+                                        dtMsg.Dispose();
+
+                                        dataAdapterCustomer.Dispose();
+                                        dataSetCustomer.Dispose();
+                                        dtCustomer.Dispose();
                                     }
                                 }
                             }
+
+                            dataAdapterWA.Dispose();
+                            dataSetWA.Dispose();
+                            dtWA.Dispose();
                         }
                     }
 
-                    updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendWhatsApp" && x.Active == 1).FirstOrDefault();
-                    if (updateLogJob != null)
-                    {
-                        updateLogJob.JobFinish = DateTime.Now;
-                        updateLogJob.Success = 1;
-                        updateLogJob.Error = 0;
-                        updateLogJob.Description = "Successfully Job Send WhatsApp.";
-                        _context.LogJob.Update(updateLogJob);
-                        _context.SaveChangesAsync();
-                    }
+                    sqlQuery = "";
+                    sqlQuery = $"UPDATE log_job SET job_finish = NOW(), success = 1, error = 0, ACTIVE = 1, DESCRIPTION = 'Successfully Job Send WhatsApp.' WHERE job_name = 'JobSendWhatsApp'";
+                    MySqlCommand command1 = new MySqlCommand(sqlQuery, mysqlConn);
+                    command1.ExecuteNonQuery();
+                    command1.Dispose();
+
                     bolProcess = false;
                 }
                 Thread.Sleep(Convert.ToInt32(_configuration.GetValue<string>("ScheduleJob:SleepJob")));
             }
             catch (Exception ex)
             {
-                var updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendWhatsApp" && x.Active == 1).FirstOrDefault();
-                if (updateLogJob != null)
-                {
-                    updateLogJob.JobFinish = DateTime.Now;
-                    updateLogJob.Success = 0;
-                    updateLogJob.Error = 1;
-                    updateLogJob.Description = ex.Message;
-                    _context.LogJob.Update(updateLogJob);
-                    _context.SaveChangesAsync();
-                }
+                string sqlQuery = $"UPDATE log_job SET job_finish = NOW(), error = 1, success = 0, ACTIVE = 1, DESCRIPTION = '" + ex.Message + "' WHERE job_name = 'JobSendWhatsApp'";
+                MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+
                 bolProcess = false;
                 Thread.Sleep(Convert.ToInt32(_configuration.GetValue<string>("ScheduleJob:SleepJob")));
             }
         }
 
-        public async void SendDataSMS()
+        public void SendDataSMS()
         {
             msgDataSMS = new SendDataMessageSMS(_configuration, _logError, _context);
             threadSendSMS = new Thread(SendSMS);
@@ -122,72 +174,132 @@ namespace APIRetail.Jobs
                 if (bolProcess == false)
                 {
                     bolProcess = true;
-                    var updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendSMS" && x.Active == 1).FirstOrDefault();
-                    if (updateLogJob != null)
-                    {
-                        updateLogJob.JobStart = DateTime.Now;
-                        updateLogJob.JobFinish = null;
-                        updateLogJob.Success = 0;
-                        updateLogJob.Error = 0;
-                        updateLogJob.Description = "";
-                        _context.LogJob.Update(updateLogJob);
-                        _context.SaveChangesAsync();
-                    }
+                    string sendDataMessage = "";
+                    string noSMS = "";
 
-                    var checkSchedule = _context.Schedule.Where(x => x.Active == 1).ToList().OrderBy(x => x.Id);
-                    if (checkSchedule.Count() > 0)
+                    string sqlQuery = $"UPDATE log_job SET job_start = NOW(), job_finish = NULL, success = NULL, ACTIVE = 1, DESCRIPTION = 'Start Process Send SMS' WHERE job_name = 'JobSendSMS'";
+                    MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+
+                    sqlQuery = $"select * from schedule where active = 1 ";
+
+                    MySqlCommand cmdSchedule = new MySqlCommand(sqlQuery, mysqlConn);
+                    //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                    MySqlDataAdapter dataAdapterSchedule = new MySqlDataAdapter(cmdSchedule);
+                    DataSet dataSetSchedule = new DataSet();
+                    dataAdapterSchedule.Fill(dataSetSchedule);
+                    DataTable dtSchedule = dataSetSchedule.Tables[0];
+
+                    if (dtSchedule.Rows.Count > 0)
                     {
-                        foreach (var data in checkSchedule)
+                        foreach (DataRow data in dtSchedule.Rows)
                         {
-                            var dataSendSMS = _context.SendSms.Where(x => x.Active == 1 && x.Send == 0 && x.ScheduleId == data.Id).ToList();
-                            if (dataSendSMS.Count() > 0)
+                            sqlQuery = $"select * from send_sms where Active = 1 AND Send = 0 AND ScheduleId =  " + Convert.ToInt64(data["Id"]) + " ";
+                            MySqlCommand cmdSMS = new MySqlCommand(sqlQuery, mysqlConn);
+                            //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                            MySqlDataAdapter dataAdapterSMS = new MySqlDataAdapter(cmdSMS);
+                            DataSet dataSetSMS = new DataSet();
+                            dataAdapterSMS.Fill(dataSetSMS);
+                            DataTable dtSMS = dataSetSMS.Tables[0];
+
+
+                            if(dtSMS.Rows.Count > 0)
                             {
-                                foreach (var dataSMS in dataSendSMS)
+                                foreach (DataRow dataSMS in dtSMS.Rows)
                                 {
-                                    if (data.ScheduleDate <= DateTime.Now)
+
+                                    if (Convert.ToDateTime(data["ScheduleDate"]) <= DateTime.Now)
+
                                     {
-                                        var sendDataMessage = _context.Message.Where(x => x.Id == dataSMS.MessageId).Select(x => x.MessageData).FirstOrDefault();
-                                        var noSMS = _context.Customer.Where(x => x.Id == dataSMS.CustomerId).Select(x => x.Telephone).FirstOrDefault();
+                                        sqlQuery = $"select * from message where Id = " + Convert.ToInt64(dataSMS["MessageId"]) + " ";
+                                        MySqlCommand cmdMsg = new MySqlCommand(sqlQuery, mysqlConn);
+                                        //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                                        MySqlDataAdapter dataAdapterMsg = new MySqlDataAdapter(cmdMsg);
+                                        DataSet dataSetMsg = new DataSet();
+                                        dataAdapterMsg.Fill(dataSetMsg);
+                                        DataTable dtMsg = dataSetMsg.Tables[0];
+
+                                        if (dtMsg.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dataMessage in dtMsg.Rows)
+                                            {
+                                                sendDataMessage = dataMessage["MessageData"].ToString();
+                                            }
+                                        }
+
+                                        sqlQuery = $"select * from customer where Id = " + Convert.ToInt64(data["CustomerId"]) + " ";
+                                        MySqlCommand cmdCustomer = new MySqlCommand(sqlQuery, mysqlConn);
+                                        //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                                        MySqlDataAdapter dataAdapterCustomer = new MySqlDataAdapter(cmdCustomer);
+                                        DataSet dataSetCustomer = new DataSet();
+                                        dataAdapterCustomer.Fill(dataSetMsg);
+                                        DataTable dtCustomer = dataSetCustomer.Tables[0];
+
+                                        if (dtCustomer.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dataCust in dtCustomer.Rows)
+                                            {
+                                                noSMS = dataCust["Telephone"].ToString();
+                                            }
+                                        }
+
+
                                         msgDataSMS.SendDataSMSAsync(sendDataMessage, noSMS);
+
+                                        dataAdapterMsg.Dispose();
+                                        dataSetMsg.Dispose();
+                                        dtMsg.Dispose();
+
+                                        dataAdapterCustomer.Dispose();
+                                        dataSetCustomer.Dispose();
+                                        dtCustomer.Dispose();
                                     }
                                 }
                             }
+
+                            dataAdapterSMS.Dispose();
+                            dataSetSMS.Dispose();
+                            dtSMS.Dispose();
+
                         }
                     }
 
-                    updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendSMS" && x.Active == 1).FirstOrDefault();
-                    if (updateLogJob != null)
-                    {
-                        updateLogJob.JobFinish = DateTime.Now;
-                        updateLogJob.Success = 1;
-                        updateLogJob.Error = 0;
-                        updateLogJob.Description = "Successfully Job Send SMS.";
-                        _context.LogJob.Update(updateLogJob);
-                        _context.SaveChangesAsync();
-                    }
+                    sqlQuery = "";
+                    sqlQuery = $"UPDATE log_job SET job_finish = NOW(), success = 1, error = 0, ACTIVE = 1, DESCRIPTION = 'Successfully Job Send SMS.' WHERE job_name = 'JobSendSMS'";
+                    MySqlCommand command1 = new MySqlCommand(sqlQuery, mysqlConn);
+                    command1.ExecuteNonQuery();
+                    command1.Dispose();
+
                     bolProcess = false;
+
+                    dataAdapterSchedule.Dispose();
+                    dataSetSchedule.Dispose();
+                    dtSchedule.Dispose();
+
+                   
+
                 }
                 Thread.Sleep(Convert.ToInt32(_configuration.GetValue<string>("ScheduleJob:SleepJob")));
             }
             catch (Exception ex)
             {
-                var updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendSMS" && x.Active == 1).FirstOrDefault();
-                if (updateLogJob != null)
-                {
-                    updateLogJob.JobFinish = DateTime.Now;
-                    updateLogJob.Success = 0;
-                    updateLogJob.Error = 1;
-                    updateLogJob.Description = ex.Message;
-                    _context.LogJob.Update(updateLogJob);
-                    _context.SaveChangesAsync();
-                }
+                string sqlQuery = $"UPDATE log_job SET job_finish = NOW(), error = 1, success = 0, ACTIVE = 1, DESCRIPTION = '" + ex.Message + "' WHERE job_name = 'JobSendSMS'";
+                MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+
                 bolProcess = false;
                 Thread.Sleep(Convert.ToInt32(_configuration.GetValue<string>("ScheduleJob:SleepJob")));
             }
 
         }
 
-        public async void SendDataEmail()
+        public void SendDataEmail()
         {
             msgDataEmail = new SendDataMessageEmail(_configuration, _logError, _context);
             threadSendEmail = new Thread(SendEmail);
@@ -202,65 +314,118 @@ namespace APIRetail.Jobs
                 if (bolProcess == false)
                 {
                     bolProcess = true;
-                    var updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendEmail" && x.Active == 1).FirstOrDefault();
-                    if (updateLogJob != null)
-                    {
-                        updateLogJob.JobStart = DateTime.Now;
-                        updateLogJob.JobFinish = null;
-                        updateLogJob.Success = 0;
-                        updateLogJob.Error = 0;
-                        updateLogJob.Description = "";
-                        _context.LogJob.Update(updateLogJob);
-                        _context.SaveChangesAsync();
-                    }
+                    string sendDataMessage = "";
+                    string email = "";
 
-                    var checkSchedule = _context.Schedule.Where(x => x.Active == 1).ToList().OrderBy(x => x.Id);
-                    if (checkSchedule.Count() > 0)
+                    string sqlQuery = $"UPDATE log_job SET job_start = NOW(), job_finish = NULL, success = NULL, ACTIVE = 1, DESCRIPTION = 'Start Process Send Email' WHERE job_name = 'JobSendEmail'";
+                    MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+
+                    sqlQuery = $"select * from schedule where active = 1 ";
+
+                    MySqlCommand cmdSchedule = new MySqlCommand(sqlQuery, mysqlConn);
+                    //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                    MySqlDataAdapter dataAdapterSchedule = new MySqlDataAdapter(cmdSchedule);
+                    DataSet dataSetSchedule = new DataSet();
+                    dataAdapterSchedule.Fill(dataSetSchedule);
+                    DataTable dtSchedule = dataSetSchedule.Tables[0];
+
+                    if (dtSchedule.Rows.Count > 0)
                     {
-                        foreach (var data in checkSchedule)
+                        foreach (DataRow data in dtSchedule.Rows)
                         {
-                            var dataSendEmail = _context.SendEmail.Where(x => x.Active == 1 && x.Send == 0 && x.ScheduleId == data.Id).ToList();
-                            if (dataSendEmail.Count() > 0)
+                            sqlQuery = $"select * from send_email where Active = 1 AND Send = 0 AND ScheduleId =  " + Convert.ToInt64(data["Id"]) + " ";
+                            MySqlCommand cmdEmail = new MySqlCommand(sqlQuery, mysqlConn);
+                            //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                            MySqlDataAdapter dataAdapterEmail = new MySqlDataAdapter(cmdEmail);
+                            DataSet dataSetEmail = new DataSet();
+                            dataAdapterEmail.Fill(dataSetEmail);
+                            DataTable dtEmail = dataSetEmail.Tables[0];
+
+                            if (dtEmail.Rows.Count > 0)
                             {
-                                foreach (var dataEmail in dataSendEmail)
+                                foreach (DataRow dataEmail in dtEmail.Rows)
                                 {
-                                    if (data.ScheduleDate <= DateTime.Now)
+                                    if (Convert.ToDateTime(data["ScheduleDate"]) <= DateTime.Now)
                                     {
-                                        var sendDataMessage = _context.Message.Where(x => x.Id == dataEmail.MessageId).Select(x => x.MessageData).FirstOrDefault();
-                                        var email = _context.Customer.Where(x => x.Id == dataEmail.CustomerId).Select(x => x.Email).FirstOrDefault();
+                                        sqlQuery = $"select * from message where Id = " + Convert.ToInt64(dataEmail["MessageId"]) + " ";
+                                        MySqlCommand cmdMsg = new MySqlCommand(sqlQuery, mysqlConn);
+                                        //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                                        MySqlDataAdapter dataAdapterMsg = new MySqlDataAdapter(cmdMsg);
+                                        DataSet dataSetMsg = new DataSet();
+                                        dataAdapterMsg.Fill(dataSetMsg);
+                                        DataTable dtMsg = dataSetMsg.Tables[0];
+
+                                        if (dtMsg.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dataMessage in dtMsg.Rows)
+                                            {
+                                                sendDataMessage = dataMessage["MessageData"].ToString();
+                                            }
+                                        }
+
+                                        sqlQuery = $"select * from customer where Id = " + Convert.ToInt64(data["CustomerId"]) + " ";
+                                        MySqlCommand cmdCustomer = new MySqlCommand(sqlQuery, mysqlConn);
+                                        //command.Parameters.Add(new MySqlParameter("@userName", userCtrl.UserName));
+
+                                        MySqlDataAdapter dataAdapterCustomer = new MySqlDataAdapter(cmdCustomer);
+                                        DataSet dataSetCustomer = new DataSet();
+                                        dataAdapterCustomer.Fill(dataSetMsg);
+                                        DataTable dtCustomer = dataSetCustomer.Tables[0];
+
+                                        if (dtCustomer.Rows.Count > 0)
+                                        {
+                                            foreach (DataRow dataCust in dtCustomer.Rows)
+                                            {
+                                                email = dataCust["Email"].ToString();
+                                            }
+                                        }
+
+                                      
                                         msgDataEmail.SendDataEmail(sendDataMessage, email);
+
+                                        dataAdapterMsg.Dispose();
+                                        dataSetMsg.Dispose();
+                                        dtMsg.Dispose();
+
+                                        dataAdapterCustomer.Dispose();
+                                        dataSetCustomer.Dispose();
+                                        dtCustomer.Dispose();
                                     }
                                 }
                             }
+
+                            dataAdapterEmail.Dispose();
+                            dataSetEmail.Dispose();
+                            dtEmail.Dispose();
                         }
                     }
 
-                    updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendEmail" && x.Active == 1).FirstOrDefault();
-                    if (updateLogJob != null)
-                    {
-                        updateLogJob.JobFinish = DateTime.Now;
-                        updateLogJob.Success = 1;
-                        updateLogJob.Error = 0;
-                        updateLogJob.Description = "Successfully Job Send Email.";
-                        _context.LogJob.Update(updateLogJob);
-                        _context.SaveChangesAsync();
-                    }
+                    sqlQuery = "";
+                    sqlQuery = $"UPDATE log_job SET job_finish = NOW(), success = 1, error = 0, ACTIVE = 1, DESCRIPTION = 'Successfully Job Send Email.' WHERE job_name = 'JobSendEmail'";
+                    MySqlCommand command1 = new MySqlCommand(sqlQuery, mysqlConn);
+                    command1.ExecuteNonQuery();
+                    command1.Dispose();
+
                     bolProcess = false;
+
+                    dataAdapterSchedule.Dispose();
+                    dataSetSchedule.Dispose();
+                    dtSchedule.Dispose();
                 }
                 Thread.Sleep(Convert.ToInt32(_configuration.GetValue<string>("ScheduleJob:SleepJob")));
             }
             catch (Exception ex)
             {
-                var updateLogJob = _context.LogJob.Where(x => x.JobName == "JobSendEmail" && x.Active == 1).FirstOrDefault();
-                if (updateLogJob != null)
-                {
-                    updateLogJob.JobFinish = DateTime.Now;
-                    updateLogJob.Success = 0;
-                    updateLogJob.Error = 1;
-                    updateLogJob.Description = ex.Message;
-                    _context.LogJob.Update(updateLogJob);
-                    _context.SaveChangesAsync();
-                }
+               
+                string sqlQuery = $"UPDATE log_job SET job_finish = NOW(), error = 1, success = 0, ACTIVE = 1, DESCRIPTION = '" + ex.Message + "' WHERE job_name = 'JobSendEmail'";
+                MySqlCommand command = new MySqlCommand(sqlQuery, mysqlConn);
+                command.ExecuteNonQuery();
+                command.Dispose();
 
                 bolProcess = false;
                 Thread.Sleep(Convert.ToInt32(_configuration.GetValue<string>("ScheduleJob:SleepJob")));

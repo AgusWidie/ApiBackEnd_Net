@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2AC23AD1-EBBC-453E-BD1F-6F48E2E58356}|APIRetail.csproj|f:\\github\\webapi\\web-api\\apiretail\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2AC23AD1-EBBC-453E-BD1F-6F48E2E58356}|APIRetail.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2AC23AD1-EBBC-453E-BD1F-6F48E2E58356}|APIRetail.csproj|f:\\github\\webapi\\web-api\\apiretail\\jobs\\sendmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2AC23AD1-EBBC-453E-BD1F-6F48E2E58356}|APIRetail.csproj|solutionrelative:jobs\\sendmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2AC23AD1-EBBC-453E-BD1F-6F48E2E58356}|APIRetail.csproj|f:\\github\\webapi\\web-api\\apiretail\\cachelist\\masterjoblist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2AC23AD1-EBBC-453E-BD1F-6F48E2E58356}|APIRetail.csproj|solutionrelative:cachelist\\masterjoblist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SendMessage.cs",
+              "DocumentMoniker": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\Jobs\\SendMessage.cs",
+              "RelativeDocumentMoniker": "Jobs\\SendMessage.cs",
+              "ToolTip": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\Jobs\\SendMessage.cs",
+              "RelativeToolTip": "Jobs\\SendMessage.cs",
+              "ViewState": "AQIAAAYBAAAAAAAAAAAAAEMAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-18T23:25:49.642Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAB0AAAAAAAAAAAAAADUAAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-18T22:32:01.679Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MasterJobList.cs",
+              "DocumentMoniker": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\CacheList\\MasterJobList.cs",
+              "RelativeDocumentMoniker": "CacheList\\MasterJobList.cs",
+              "ToolTip": "F:\\Github\\WebApi\\Web-Api\\APIRetail\\CacheList\\MasterJobList.cs",
+              "RelativeToolTip": "CacheList\\MasterJobList.cs",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAAABEAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-29T23:12:18.256Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
